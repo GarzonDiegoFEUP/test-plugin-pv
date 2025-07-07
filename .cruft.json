@@ -1,0 +1,29 @@
+{
+  "template": "https://github.com/FAIRmat-NFDI/cookiecutter-nomad-pv-plugin",
+  "commit": "5ac9c0661bb27feba4dead22f49aacd16712f34e",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "full_name": "Diego Garzon",
+      "email": "diego.garzon@inl.int",
+      "github_username": "GarzonDiegoFEUP",
+      "plugin_name": "test-plugin-pv",
+      "module_name": "test_plugin_pv",
+      "lab_name": "INL",
+      "short_description": "Example PV template",
+      "version": "0.1.0",
+      "license": "MIT",
+      "include_schema_package": true,
+      "include_normalizer": true,
+      "include_parser": true,
+      "include_app": true,
+      "include_example_uploads": true,
+      "_copy_without_render": [
+        "*.html"
+      ],
+      "_template": "https://github.com/FAIRmat-NFDI/cookiecutter-nomad-pv-plugin",
+      "_commit": "5ac9c0661bb27feba4dead22f49aacd16712f34e"
+    }
+  },
+  "directory": null
+}
