@@ -12,7 +12,6 @@ class NewParserEntryPoint(ParserEntryPoint):
 
 
 class INLExperimentParserEntryPoint(ParserEntryPoint):
-
     def load(self):
         from test_plugin_pv.parsers.INL_batch_parser import INLExperimentParser
 
@@ -20,7 +19,6 @@ class INLExperimentParserEntryPoint(ParserEntryPoint):
 
 
 class INLParserEntryPoint(ParserEntryPoint):
-
     def load(self):
         from test_plugin_pv.parsers.INL_measurement_parser import INLParser
 

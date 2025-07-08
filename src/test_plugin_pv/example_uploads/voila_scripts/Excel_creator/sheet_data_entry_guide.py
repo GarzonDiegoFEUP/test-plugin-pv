@@ -54,8 +54,20 @@ def add_guide_sheet(workbook):
         ['Sample area', 'Active area (e.g., ITO/Cu overlap)', 'Number', 'cm²', '0.16'],
         ['Number of pixels', 'Number of pixels', 'Number', '', '6'],
         ['Pixel area', 'Area per pixel', 'Number', 'cm²', '0.16'],
-        ['Substrate Material', 'Substrate material', 'Alphanumeric', '', 'Soda Lime Glass'],
-        ['Substrate Conductive Layer', 'Conductive layer material', 'Alphanumeric', '', 'ITO'],
+        [
+            'Substrate Material',
+            'Substrate material',
+            'Alphanumeric',
+            '',
+            'Soda Lime Glass',
+        ],
+        [
+            'Substrate Conductive Layer',
+            'Conductive layer material',
+            'Alphanumeric',
+            '',
+            'ITO',
+        ],
         ['Number of Junctions', 'Number of junctions', 'Number', '', '1'],
         ['Notes', 'Additional notes or methods', 'Alphanumeric', '', ''],
     ]
@@ -83,7 +95,13 @@ def add_guide_sheet(workbook):
         ['Tool/GB name', 'Tool used', 'Text', '', 'HZB-HySprintBox'],
         ['Solvent 1 name', 'First solvent', 'Text', '', 'DMF'],
         ['Solvent 1 volume', 'Volume of solvent 1', 'Number', 'µL', '10'],
-        ['Solvent 1 relative amt.', 'Relative amount of solvent 1', 'Number', '', '1.5'],
+        [
+            'Solvent 1 relative amt.',
+            'Relative amount of solvent 1',
+            'Number',
+            '',
+            '1.5',
+        ],
         ['Solute 1 name', 'First solute', 'Text', '', 'PbI2'],
         ['Solute 1 Concentration', 'Concentration of solute 1', 'Number', 'mM', '1.42'],
         ['Solution volume', 'Total solution volume', 'Number', 'µL', '100'],
@@ -181,7 +199,9 @@ def add_guide_sheet(workbook):
     guide_row = row + 1  # next row for How-to-guide
 
     guide_ws.cell(row=voila_row, column=1, value='• File Uploader Voila Dashboard')
-    guide_ws.cell(row=voila_row, column=1).hyperlink = 'https://nomad-hzb-se.de/nomad-oasis/gui/search/voila'
+    guide_ws.cell(
+        row=voila_row, column=1
+    ).hyperlink = 'https://nomad-hzb-se.de/nomad-oasis/gui/search/voila'
     guide_ws.cell(row=voila_row, column=1).style = 'Hyperlink'
 
     guide_ws.cell(

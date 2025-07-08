@@ -140,8 +140,7 @@ class INL_Sample(SolcarCellSample, EntryData):
             hide=['users', 'components', 'elemental_composition'],
             properties=dict(order=['name', 'substrate', 'architecture']),
         ),
-        a_template=dict(
-            institute='INL_INL'),
+        a_template=dict(institute='INL_INL'),
         label_quantity='sample_id',
     )
 
@@ -449,8 +448,9 @@ class INL_LaserScribing(LaserScribing, EntryData):
     m_def = Section(
         a_eln=dict(
             hide=['lab_id', 'users', 'end_time', 'steps', 'instruments', 'results'],
-            properties=dict(order=['name', 'location', 'present',
-                            'datetime', 'batch', 'samples']),
+            properties=dict(
+                order=['name', 'location', 'present', 'datetime', 'batch', 'samples']
+            ),
         )
     )
 
@@ -486,6 +486,7 @@ class INL_Storage(Storage, EntryData):
 
 
 # %%####################################### Measurements
+
 
 class INL_JVmeasurement(JVMeasurement, EntryData):
     m_def = Section(
@@ -532,14 +533,17 @@ class INL_JVmeasurement(JVMeasurement, EntryData):
     def normalize(self, archive, logger):
         if not self.samples and self.data_file:
             search_id = self.data_file.split('.')[0]
-            set_sample_reference(archive, self, search_id,
-                                 upload_id=archive.metadata.upload_id)
+            set_sample_reference(
+                archive, self, search_id, upload_id=archive.metadata.upload_id
+            )
         if self.data_file:
             # todo detect file format
             with archive.m_context.raw_file(self.data_file, 'br') as f:
                 encoding = get_encoding(f)
 
-            with archive.m_context.raw_file(self.data_file, 'tr', encoding=encoding) as f:
+            with archive.m_context.raw_file(
+                self.data_file, 'tr', encoding=encoding
+            ) as f:
                 pass  # add parsing here
 
         super().normalize(archive, logger)
@@ -575,14 +579,17 @@ class INL_SimpleMPPTracking(MPPTracking, EntryData):
     def normalize(self, archive, logger):
         if not self.samples and self.data_file:
             search_id = self.data_file.split('.')[0]
-            set_sample_reference(archive, self, search_id,
-                                 upload_id=archive.metadata.upload_id)
+            set_sample_reference(
+                archive, self, search_id, upload_id=archive.metadata.upload_id
+            )
 
         if self.data_file:
             with archive.m_context.raw_file(self.data_file, 'br') as f:
                 encoding = get_encoding(f)
 
-            with archive.m_context.raw_file(self.data_file, 'tr', encoding=encoding) as f:
+            with archive.m_context.raw_file(
+                self.data_file, 'tr', encoding=encoding
+            ) as f:
                 pass  # add parsing here
 
         super().normalize(archive, logger)
@@ -622,31 +629,35 @@ class INL_EQEmeasurement(EQEMeasurement, EntryData):
         eqe_data = []
         if not self.samples and self.data_file:
             search_id = self.data_file.split('.')[0]
-            set_sample_reference(archive, self, search_id,
-                                 upload_id=archive.metadata.upload_id)
+            set_sample_reference(
+                archive, self, search_id, upload_id=archive.metadata.upload_id
+            )
 
         if self.data_file:
             with archive.m_context.raw_file(self.data_file, 'br') as f:
                 encoding = get_encoding(f)
-            with archive.m_context.raw_file(self.data_file, 'tr', encoding=encoding) as f:
-
+            with archive.m_context.raw_file(
+                self.data_file, 'tr', encoding=encoding
+            ) as f:
                 txt = ''
                 lines = f.readlines()
-                i=0
+                i = 0
                 line = lines[i]
                 while line != 'end data\n':
                     txt += line
-                    i +=1
+                    i += 1
                     line = lines[i]
 
-                fil_data = open('data_'  + f.split('.txt')[0] + '.txt', 'w')
+                fil_data = open('data_' + f.split('.txt')[0] + '.txt', 'w')
                 fil_data.write(txt)
                 fil_data.close()
                 data = pd.read_csv('data_' + f.split('.txt')[0] + '.txt', sep='\t')
                 eqe_data_new = EQEMeasurement()
                 eqe_data_new.data.raw_eqe_array = data['QE'].values
                 eqe_data_new.data.raw_wavelength_array = data['WL'].values
-                eqe_data_new.data.raw_photon_energy_array = 1239.84193/(data['WL']+0.000001)
+                eqe_data_new.data.raw_photon_energy_array = 1239.84193 / (
+                    data['WL'] + 0.000001
+                )
 
                 eqe_data.append(eqe_data_new)
 
@@ -698,8 +709,7 @@ class INL_Process(BaseProcess, EntryData):
                 'instruments',
                 'results',
             ],
-            properties=dict(
-                order=['name', 'present', 'data_file', 'batch', 'samples']),
+            properties=dict(order=['name', 'present', 'data_file', 'batch', 'samples']),
         )
     )
 

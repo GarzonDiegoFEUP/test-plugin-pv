@@ -40,6 +40,7 @@ from nomad.metainfo import Quantity
 from nomad.parsing import MatchingParser
 
 from test_plugin_pv.schema_packages.INL_package import (
+    INL_AtomicLayerDeposition,
     INL_Batch,
     INL_Cleaning,
     INL_Evaporation,
@@ -51,10 +52,8 @@ from test_plugin_pv.schema_packages.INL_package import (
     INL_SpinCoating,
     INL_Sputtering,
     INL_Substrate,
-    INL_AtomicLayerDeposition,
     ProcessParameter,
 )
-
 
 """
 This is a hello world style example for an example parser/converter.
@@ -90,7 +89,8 @@ class INLExperimentParser(MatchingParser):
         compression: str = None,
     ):
         is_mainfile_super = super().is_mainfile(
-            filename, mime, buffer, decoded_buffer, compression)
+            filename, mime, buffer, decoded_buffer, compression
+        )
         if not is_mainfile_super:
             return False
         try:
@@ -119,11 +119,16 @@ class INLExperimentParser(MatchingParser):
             'Substrate conductive layer',
         ]
         substrates_col = [
-            s for s in substrates_col if s in df['Experiment Info'].columns]
-        for i, sub in df['Experiment Info'][substrates_col].drop_duplicates().iterrows():
+            s for s in substrates_col if s in df['Experiment Info'].columns
+        ]
+        for i, sub in (
+            df['Experiment Info'][substrates_col].drop_duplicates().iterrows()
+        ):
             if pd.isna(sub).all():
                 continue
-            substrates.append((f'{i}_substrate', sub, map_substrate(sub, INL_Substrate)))
+            substrates.append(
+                (f'{i}_substrate', sub, map_substrate(sub, INL_Substrate))
+            )
 
         def find_substrate(d):
             for s in substrates:
@@ -133,9 +138,14 @@ class INLExperimentParser(MatchingParser):
         for i, row in df['Experiment Info'].iterrows():
             if pd.isna(row).all():
                 continue
-            substrate_name = find_substrate(
-                row[substrates_col]) + '.archive.json' if substrates_col else None
-            archives.append(map_basic_sample(row, substrate_name, upload_id, INL_Sample))
+            substrate_name = (
+                find_substrate(row[substrates_col]) + '.archive.json'
+                if substrates_col
+                else None
+            )
+            archives.append(
+                map_basic_sample(row, substrate_name, upload_id, INL_Sample)
+            )
 
         for i, col in enumerate(df.columns.get_level_values(0).unique()):
             if col == 'Experiment Info':
@@ -151,13 +161,21 @@ class INLExperimentParser(MatchingParser):
                     if x[col].astype('object').equals(row.astype('object'))
                 ]
                 if 'Cleaning' in col:
-                    archives.append(map_cleaning(i, j, lab_ids, row, upload_id, INL_Cleaning))
+                    archives.append(
+                        map_cleaning(i, j, lab_ids, row, upload_id, INL_Cleaning)
+                    )
 
                 if 'Laser Scribing' in col:
-                    archives.append(map_laser_scribing(i, j, lab_ids, row, upload_id, INL_LaserScribing))
+                    archives.append(
+                        map_laser_scribing(
+                            i, j, lab_ids, row, upload_id, INL_LaserScribing
+                        )
+                    )
 
                 if 'Generic Process' in col:  # move up
-                    generic_process = map_generic(i, j, lab_ids, row, upload_id, INL_Process)
+                    generic_process = map_generic(
+                        i, j, lab_ids, row, upload_id, INL_Process
+                    )
                     map_generic_parameters(generic_process[1], row)
                     archives.append(generic_process)
 
@@ -169,27 +187,38 @@ class INLExperimentParser(MatchingParser):
                     if 'Co-Evaporation' in col:
                         coevap = True
                     archives.append(
-                        map_evaporation(i, j, lab_ids, row, upload_id, INL_Evaporation, coevap)
+                        map_evaporation(
+                            i, j, lab_ids, row, upload_id, INL_Evaporation, coevap
+                        )
                     )
 
                 if 'Spin Coating' in col:
-                    archives.append(map_spin_coating(i, j, lab_ids, row, upload_id, INL_SpinCoating))
+                    archives.append(
+                        map_spin_coating(i, j, lab_ids, row, upload_id, INL_SpinCoating)
+                    )
 
                 if 'Slot Die Coating' in col:
-                    archives.append(map_sdc(i, j, lab_ids, row, upload_id, INL_SlotDieCoating))
+                    archives.append(
+                        map_sdc(i, j, lab_ids, row, upload_id, INL_SlotDieCoating)
+                    )
 
                 if 'Sputtering' in col:
-                    archives.append(map_sputtering(i, j, lab_ids, row, upload_id, INL_Sputtering))
+                    archives.append(
+                        map_sputtering(i, j, lab_ids, row, upload_id, INL_Sputtering)
+                    )
 
                 if 'Inkjet Printing' in col:
                     archives.append(
-                        map_inkjet_printing(i, j, lab_ids, row, upload_id, INL_Inkjet_Printing)
+                        map_inkjet_printing(
+                            i, j, lab_ids, row, upload_id, INL_Inkjet_Printing
+                        )
                     )
 
                 if 'ALD' in col:
                     archives.append(
                         map_atomic_layer_deposition(
-                            i, j, lab_ids, row, upload_id, INL_AtomicLayerDeposition)
+                            i, j, lab_ids, row, upload_id, INL_AtomicLayerDeposition
+                        )
                     )
 
         refs = []

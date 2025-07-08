@@ -18,7 +18,6 @@
 
 import datetime
 import os
-import sys
 
 from baseclasses.helper.utilities import (
     create_archive,
@@ -84,5 +83,7 @@ class INLParser(MatchingParser):
 
         file_name = f'{os.path.basename(mainfile)}.archive.json'
         eid = get_entry_id_from_file_name(file_name, archive)
-        archive.data = RawFileINL(processed_archive=get_reference(archive.metadata.upload_id, eid))
+        archive.data = RawFileINL(
+            processed_archive=get_reference(archive.metadata.upload_id, eid)
+        )
         create_archive(entry, archive, file_name)

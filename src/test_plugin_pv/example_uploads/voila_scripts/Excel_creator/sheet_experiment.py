@@ -49,7 +49,9 @@ def add_experiment_sheet(workbook, process_sequence, is_testing=False):
 
         if process_name == 'Experiment Info':
             # Check if Ink Recycling exists in the sequence
-            has_ink_recycling = any(p.get('process') == 'Ink Recycling' for p in process_sequence)
+            has_ink_recycling = any(
+                p.get('process') == 'Ink Recycling' for p in process_sequence
+            )
 
             if has_ink_recycling:
                 # Simplified fields for ink recycling
@@ -62,7 +64,7 @@ def add_experiment_sheet(workbook, process_sequence, is_testing=False):
                     make_label('Nomad ID', ''),
                     make_label('Variation', 'Some variation'),
                 ]
-            
+
             # Original experiment info fields for other cases
             return [
                 # Using this format to speed up testing with nomad
@@ -107,7 +109,12 @@ def add_experiment_sheet(workbook, process_sequence, is_testing=False):
                 steps.append(make_label('UV-Ozone Time [s]', 900))
             return steps
 
-        if process_name in ['Spin Coating', 'Dip Coating', 'Slot Die Coating', 'Inkjet Printing']:
+        if process_name in [
+            'Spin Coating',
+            'Dip Coating',
+            'Slot Die Coating',
+            'Inkjet Printing',
+        ]:
             steps = [
                 make_label('Material name', 'Cs0.05(MA0.17FA0.83)0.95Pb(I0.83Br0.17)3'),
                 make_label('Layer type', 'Absorber'),
@@ -137,8 +144,12 @@ def add_experiment_sheet(workbook, process_sequence, is_testing=False):
 
             # Add process-specific steps
             if process_name == 'Spin Coating':
-                steps.extend([make_label('Solution volume [uL]', 100),
-                             make_label('Spin Delay [s]', 0.5)])
+                steps.extend(
+                    [
+                        make_label('Solution volume [uL]', 100),
+                        make_label('Spin Delay [s]', 0.5),
+                    ]
+                )
 
                 if config.get('spinsteps', 0) == 1:
                     steps.extend(
@@ -215,7 +226,7 @@ def add_experiment_sheet(workbook, process_sequence, is_testing=False):
                     [
                         make_label('Printhead name', 'Spectra 0.8uL'),
                         make_label('Number of active nozzles', 128),
-                        make_label('Active nozzles', "all"),
+                        make_label('Active nozzles', 'all'),
                         make_label('Droplet density X [dpi]', 400),
                         make_label('Droplet density Y [dpi]', 300),
                         make_label('Quality factor', 3),
@@ -232,8 +243,8 @@ def add_experiment_sheet(workbook, process_sequence, is_testing=False):
                         make_label('Printing speed [mm/s]', 10),
                         make_label('Print head angle [deg]', 13),
                         make_label('Nozzle temperature [°C]', 35),
-                        make_label('Nozzle voltage config file', "testfile.txt"),
-                        make_label('Image used', "Square inch 300 dpi"),
+                        make_label('Nozzle voltage config file', 'testfile.txt'),
+                        make_label('Image used', 'Square inch 300 dpi'),
                         make_label('rel. humidity [%]', 45),
                     ]
                 )
@@ -298,17 +309,15 @@ def add_experiment_sheet(workbook, process_sequence, is_testing=False):
                 steps.extend(
                     [
                         make_label(f'Material name {i}', 'Cupper'),
-                        make_label(
-                            f'Source temperature start {i}[°C]', 100 + 10 + i),
-                        make_label(
-                            f'Source temperature end {i}[°C]', 110 + 10 + i),
+                        make_label(f'Source temperature start {i}[°C]', 100 + 10 + i),
+                        make_label(f'Source temperature end {i}[°C]', 110 + 10 + i),
                         make_label(f'Thickness {i} [nm]', 20 + i),
                         make_label(f'Rate {i} [angstrom/s]', 0.5 + i),
                         make_label(f'Base pressure {i} [bar]', 1e-6),
                         make_label(f'Pressure start {i} [bar]', 5e-6),
                         make_label(f'Pressure end {i} [bar]', 3e-6),
                         make_label(f'Substrate temperature {i} [°C]', 25),
-                        make_label(f'Tooling factor {i}', 1.0 + 0.1 + i)
+                        make_label(f'Tooling factor {i}', 1.0 + 0.1 + i),
                     ]
                 )
             steps.append(make_label('Notes', 'Test note co-evaporation'))
@@ -386,48 +395,60 @@ def add_experiment_sheet(workbook, process_sequence, is_testing=False):
             steps = []
             # Ink Preparation steps
             for i in range(1, config.get('solvents', 0) + 1):
-                steps.extend([
-                    make_label(f'Solvent {i} name', f'DMF {i}'),
-                    make_label(f'Solvent {i} volume [ml]', 10 * i),
-                ])
+                steps.extend(
+                    [
+                        make_label(f'Solvent {i} name', f'DMF {i}'),
+                        make_label(f'Solvent {i} volume [ml]', 10 * i),
+                    ]
+                )
             for i in range(1, config.get('solutes', 0) + 1):
-                steps.extend([
-                    make_label(f'Solute {i} name', f'PbI2 {i}'),
-                    make_label(f'Solute {i} concentration [M]', 1.5 * i),
-                    make_label(f'Solute {i} amount [g]', 5.0 * i),
-                    make_label(f'Solute {i} moles [mol]', 0.02 * i),
-                ])
+                steps.extend(
+                    [
+                        make_label(f'Solute {i} name', f'PbI2 {i}'),
+                        make_label(f'Solute {i} concentration [M]', 1.5 * i),
+                        make_label(f'Solute {i} amount [g]', 5.0 * i),
+                        make_label(f'Solute {i} moles [mol]', 0.02 * i),
+                    ]
+                )
             for i in range(1, config.get('precursors', 0) + 1):
-                steps.extend([
-                    make_label(f'Precursor {i} name', f'MAI {i}'),
-                    make_label(f'Precursor {i} moles [mol]', 0.01 * i),
-                ])
-            
+                steps.extend(
+                    [
+                        make_label(f'Precursor {i} name', f'MAI {i}'),
+                        make_label(f'Precursor {i} moles [mol]', 0.01 * i),
+                    ]
+                )
+
             # Mixing steps
-            steps.extend([
-            make_label('Functional liquid name', 'FL'),
-            make_label('Functional liquid volume [ml]', 25),
-            make_label('Dissolving temperature [°C]', 60),
-            ])
+            steps.extend(
+                [
+                    make_label('Functional liquid name', 'FL'),
+                    make_label('Functional liquid volume [ml]', 25),
+                    make_label('Dissolving temperature [°C]', 60),
+                ]
+            )
 
             # Filtering steps
-            steps.extend([
-            make_label('Filter material', 'Paper'),
-            make_label('Filter size [mm]', 0.45),
-            make_label('Filter weight [g]', 0.5),
-            ])
+            steps.extend(
+                [
+                    make_label('Filter material', 'Paper'),
+                    make_label('Filter size [mm]', 0.45),
+                    make_label('Filter weight [g]', 0.5),
+                ]
+            )
 
             # Results steps
-            steps.extend([
-            make_label('Recovered solute [g]', 4.2),
-            make_label('Yield [%]', 84),
-            make_label('Notes', 'Test recycling process'),
-            ])
+            steps.extend(
+                [
+                    make_label('Recovered solute [g]', 4.2),
+                    make_label('Yield [%]', 84),
+                    make_label('Notes', 'Test recycling process'),
+                ]
+            )
             return steps
 
         else:
             print(
-            f"Warning: Process '{process_name}' not defined in generate_steps_for_process. Using default steps."
+                f"Warning: Process '{process_name}' not defined in generate_steps_for_process. Using default steps."
             )
             return [make_label('Undefined Process', 'Test value')]
 
@@ -445,13 +466,15 @@ def add_experiment_sheet(workbook, process_sequence, is_testing=False):
         else:
             process_label = process_name
 
-        ws.merge_cells(start_row=1, start_column=start_col,
-                       end_row=1, end_column=end_col)
+        ws.merge_cells(
+            start_row=1, start_column=start_col, end_row=1, end_column=end_col
+        )
         cell = ws.cell(row=1, column=start_col)
         cell.value = process_label
         cell.alignment = Alignment(horizontal='center', vertical='center')
-        cell.fill = PatternFill(start_color=cell_color,
-                                end_color=cell_color, fill_type='solid')
+        cell.fill = PatternFill(
+            start_color=cell_color, end_color=cell_color, fill_type='solid'
+        )
 
         row2_color = lighten_color(cell_color)
         for i, step_item in enumerate(steps):
@@ -460,8 +483,9 @@ def add_experiment_sheet(workbook, process_sequence, is_testing=False):
                 step_label, test_val = step_item
                 cell = ws.cell(row=2, column=col_index)
                 cell.value = step_label
-                cell.fill = PatternFill(start_color=row2_color,
-                                        end_color=row2_color, fill_type='solid')
+                cell.fill = PatternFill(
+                    start_color=row2_color, end_color=row2_color, fill_type='solid'
+                )
                 if is_testing:
                     ws.cell(row=3, column=col_index, value=test_val)
         start_col = end_col + 1
@@ -469,7 +493,9 @@ def add_experiment_sheet(workbook, process_sequence, is_testing=False):
 
     # Example: Apply a custom formula for the "Nomad ID" column (example only)
     for row in range(3, 4):
-        nomad_id_formula = f'=CONCATENATE("HZB_",B{row},"_",C{row},"_",D{row},"_C-",E{row})'
+        nomad_id_formula = (
+            f'=CONCATENATE("HZB_",B{row},"_",C{row},"_",D{row},"_C-",E{row})'
+        )
         ws[f'F{row}'].value = nomad_id_formula
 
     # Adjust column widths
