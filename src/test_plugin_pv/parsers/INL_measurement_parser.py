@@ -65,11 +65,11 @@ class INLParser(MatchingParser):
         measurment_type = mainfile_split[-2].lower()
         entry = INL_Measurement()
 
-        if measurment_type == 'jv':
+        if 'jv' in measurment_type:
             entry = INL_JVmeasurement()
-        if measurment_type == 'eqe':
+        if 'eqe' in measurment_type:
             entry = INL_EQEmeasurement()
-        if measurment_type == 'mppt':
+        if 'mppt' in measurment_type:
             entry = INL_SimpleMPPTracking()
         archive.metadata.entry_name = os.path.basename(mainfile)
 

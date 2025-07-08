@@ -20,6 +20,7 @@ import random
 import string
 
 import numpy as np
+import pandas as pd
 from baseclasses import (
     BaseMeasurement,
     BaseProcess,
@@ -539,7 +540,7 @@ class INL_JVmeasurement(JVMeasurement, EntryData):
                 encoding = get_encoding(f)
 
             with archive.m_context.raw_file(self.data_file, 'tr', encoding=encoding) as f:
-                pass  # ad dparsing here
+                pass  # add parsing here
 
         super().normalize(archive, logger)
 
@@ -618,6 +619,7 @@ class INL_EQEmeasurement(EQEMeasurement, EntryData):
     )
 
     def normalize(self, archive, logger):
+        eqe_data = []
         if not self.samples and self.data_file:
             search_id = self.data_file.split('.')[0]
             set_sample_reference(archive, self, search_id,
@@ -627,9 +629,26 @@ class INL_EQEmeasurement(EQEMeasurement, EntryData):
             with archive.m_context.raw_file(self.data_file, 'br') as f:
                 encoding = get_encoding(f)
             with archive.m_context.raw_file(self.data_file, 'tr', encoding=encoding) as f:
-                pass  # add parsing here
 
-            eqe_data = []
+                txt = ''
+                lines = f.readlines()
+                i=0
+                line = lines[i]
+                while line != 'end data\n':
+                    txt += line
+                    i +=1
+                    line = lines[i]
+
+                fil_data = open('data_'  + f.split('.txt')[0] + '.txt', 'w')
+                fil_data.write(txt)
+                fil_data.close()
+                data = pd.read_csv('data_' + f.split('.txt')[0] + '.txt', sep='\t')
+                eqe_data_new = EQEMeasurement()
+                eqe_data_new.data.raw_eqe_array = data['QE'].values
+                eqe_data_new.data.raw_wavelength_array = data['WL'].values
+                eqe_data_new.data.raw_photon_energy_array = 1239.84193/(data['WL']+0.000001)
+
+                eqe_data.append(eqe_data_new)
 
             if eqe_data:
                 band_gaps = np.array([d.bandgap_eqe.magnitude for d in eqe_data])
